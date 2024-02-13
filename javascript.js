@@ -4,8 +4,10 @@ const CHOICES = ["rock", "paper", "scissors"];
 //returns a random integer between 0 and the randMax constant minus 1
 function getRandNum() { return Math.floor(Math.random(RANDMAX)); }
 
+//generates a random choice to use for the computer
 function getComputerChoice() { return CHOICES[getRandNum()]; }
 
+//prompts the user for a choices until one from the CHOICES array is chosen (not case-sensitive)
 function getPlayerChoice() {
     let playerChoice;
 
@@ -17,6 +19,7 @@ function getPlayerChoice() {
     return playerChoice;
 }
 
+//plays one round of the game and returns the result
 function playRound() {
     const playerChoice = getPlayerChoice();
     const compChoice = getComputerChoice();
@@ -62,7 +65,8 @@ function playRound() {
 }
 
 const ROUNDS = 5;
-
+//plays as many rounds of the game as is in the above const variable
+// and finally returns the score for all the rounds afterwards
 function playGame() {
     let score = [0, 0, 0]  //[wins, losses, ties]
 
