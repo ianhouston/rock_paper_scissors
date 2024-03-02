@@ -11,9 +11,9 @@ function getComputerChoice() { return CHOICES[getRandNum()]; }
 function getPlayerChoice() {
     let playerChoice;
 
-    playerChoice = (prompt("Play rock, paper, or scissors?")).toLowerCase;
-    while (!(playerChoice in CHOICES)) {
-        playerChoice = (prompt("Invalid choice! Please check your spelling and try again.\nPlay rock, paper, or scissors?")).toLowerCase;
+    playerChoice = (prompt("Play rock, paper, or scissors?")).toLowerCase();
+    while (!(CHOICES.includes(playerChoice))) {
+        playerChoice = (prompt("Invalid choice! Please check your spelling and try again.\nPlay rock, paper, or scissors?")).toLowerCase();
     }
     
     return playerChoice;
@@ -23,6 +23,8 @@ function getPlayerChoice() {
 function playRound() {
     const playerChoice = getPlayerChoice();
     const compChoice = getComputerChoice();
+
+    console.log(`The computer chose \"${compChoice}\" vs your \"${playerChoice}\"`);
 
     switch (playerChoice) {
         case "rock":
@@ -77,10 +79,10 @@ function playGame() {
                 score[0]++;
                 break;
             case 0:
-                score[1]++;
+                score[2]++;
                 break;
             case -1:
-                score [2]++;
+                score [1]++;
                 break;
         }
     }
