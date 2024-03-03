@@ -8,15 +8,12 @@
 
 const RANDMAX = 3;
 const CHOICES = ["ROCK", "PAPER", "SCISSORS"];
+const ROUNDS = 3; //for console use
+let roundsPlayed = 0;
 const score = new Map();
 score.set('WINS', 0);
 score.set('LOSSES', 0);
 score.set('TIES', 0);
-/* let score = {
-    "wins" : 0,
-    "losses" : 0,
-    "ties" : 0
-} */
 
 // DOM MANIPULATION
 const body = document.querySelector('body');
@@ -62,7 +59,7 @@ score.forEach((value, key) => {
 
 // GAME SCRIPT
 //returns a random integer between 0 and the randMax constant minus 1
-function getRandNum() { return Math.floor(Math.random(RANDMAX)); }
+function getRandNum() { return Math.floor(Math.random() * RANDMAX); }
 
 //generates a random choice to use for the computer
 function getComputerChoice() { return CHOICES[getRandNum()]; }
@@ -80,8 +77,11 @@ function getPlayerChoice() {
 }
 
 //plays one round of the game and returns the result
-function playRound() {
-    const playerChoice = getPlayerChoice();
+function playRound(playerChoice) {
+    // this conditional is for console input if the buttons are not used
+    if (playerChoice == undefined) {
+        playerChoice = getPlayerChoice();
+    }
     const compChoice = getComputerChoice();
 
     console.log(`The computer chose \"${compChoice}\" vs your \"${playerChoice}\"`);
@@ -126,13 +126,13 @@ function playRound() {
     }
 }
 
-const ROUNDS = 5;
+//FOR CONSOLE PLAYING
 //plays as many rounds of the game as is in the above const variable
 // and finally returns the score for all the rounds afterwards
 function playGame() {
     for (let i = 0; i < ROUNDS; i++) {
         console.log(`Starting round ${i+1}!`); // DELETE THIS
-        gameInfoContainer.childNodes.item(0).innerText = `---ROUND ${i+1}---`;
+        gameInfoContainer.childNodes.item(0).innerText = `---ROUND ${++roundsPlayed}---`;
         switch (playRound()) {
             case 1:
                 score.set("WINS", score.get("WINS") + 1);
@@ -158,5 +158,28 @@ function playGame() {
     }
     else {
         console.log("You both tied for score.");
+    }
+}
+
+// ADDING EVENTS TO BUTTONS
+const playRoundOnClick = (event) => {
+    switch(event.curentTarget.textContent) {
+        case 'ROCK':
+            buttonContainer.childNodes.item(0).setAttribute('style', 'border-color: lightgreen;');
+            playRound("ROCK");
+            buttonContainer.childNodes.item(0).setAttribute('style', 'border-color: white;');
+            break;
+        case 'PAPER':
+            buttonContainer.childNodes.item(1).setAttribute('style', 'border-color: lightgreen;');
+            playRound("PAPER");
+            buttonContainer.childNodes.item(1).setAttribute('style', 'border-color: white;');
+            break;
+        case 'SCISSORS':
+            buttonContainer.childNodes.item(2).setAttribute('style', 'border-color: lightgreen;');
+            playRound("SCISSORS");
+            buttonContainer.childNodes.item(2).setAttribute('style', 'border-color: white;');
+            break;
+        default:
+            alert("ERROR: Failed to recognize which button was clicked!");
     }
 }
