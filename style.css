@@ -4,17 +4,8 @@ body {
     flex-direction: column;
     margin: 0;
 }
-h1 {
+h1, h3, p, span {
     color: #4b4a4a;
-}
-
-p {
-    color: #4b4a4a;
-}
-
-span {
-    color: #4b4a4a;
-    font-weight: 800;
 }
 
 .titleBanner {
