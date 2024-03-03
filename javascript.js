@@ -2,7 +2,7 @@
 // In our UI, the player should be able to play the game by clicking on buttons rather than typing their answer in a prompt.
 // For now, remove the logic that plays exactly five rounds.
 // Create three buttons, one for each selection. Add an event listener to the buttons that call your playRound function with the correct playerSelection every time a button is clicked. (you can keep the console.logs for this step)
-// DO!!!Add a div for displaying results and change all of your console.logs into DOM methods.
+// Add a div for displaying results and change all of your console.logs into DOM methods.
 // DO!!!Display the running score, and announce a winner of the game once one player reaches 5 points.
 // You will likely have to refactor (rework/rewrite) your original code to make it work for this. That’s OK! Reworking old code is an important part of a programmer’s life.
 
@@ -54,6 +54,9 @@ gameInfoContainer.lastElementChild.innerText = "---SCORE---";
 //this will contain the text for the score
 const scoreText = document.createElement('p');
 gameInfoContainer.appendChild(scoreText);
+
+//this will present a winner after either the computer or user reaches 5 wins
+gameInfoContainer.appendChild(document.createElement('h2'));
 
 //this creates the individual text elements for score to make it easier to modify
 score.forEach((value, key) => {
@@ -119,38 +122,59 @@ function playRound(playerChoice) {
             switch (compChoice) {
                 case "ROCK":
                     console.log("A Tie.");
-                    return incrementTies();
+                    incrementTies();
+                    break;
                 case "PAPER":
-                    console.log("You Win!");
-                    return incrementWins();
-                case "SCISSORS":
                     console.log("You Lose...");
-                    return incrementLosses();
+                    incrementWins();
+                    break;
+                case "SCISSORS":
+                    console.log("You Win!");
+                    incrementLosses();
+                    break;
             }
+            break;
         case "PAPER":
             switch (compChoice) {
                 case "ROCK":
                     console.log("You Win!");
-                    return incrementWins();
+                    incrementWins();
+                    break;
                 case "PAPER":
                     console.log("A Tie.");
-                    return incrementTies();
+                    incrementTies();
+                    break;
                 case "SCISSORS":
                     console.log("You Lose...");
-                    return incrementLosses();
+                    incrementLosses();
+                    break;
             }
+            break;
         case "SCISSORS":
             switch (compChoice) {
                 case "ROCK":
                     console.log("You Lose...");
-                    return incrementLosses();
+                    incrementLosses();
+                    break;
                 case "PAPER":
                     console.log("You Win!");
-                    return incrementWins();
+                    incrementWins();
+                    break;
                 case "SCISSORS":
                     console.log("A Tie.");
-                    return incrementTies();
+                    incrementTies();
+                    break;
             }
+    }
+    //present a winner once the user or the computer reaches 5 wins
+    if (score.get("WINS") == 5) {
+        gameInfoContainer.lastElementChild.innerText = "You won the game! Congratulations!\nYou can keep playing if you want to";
+    }
+    else if (score.get("LOSSES") == 5) {
+        "You lost the game... that's too bad.\nYou can keep playing if you want to";
+    }
+    else {
+        console.log(score);
     }
 }
 
