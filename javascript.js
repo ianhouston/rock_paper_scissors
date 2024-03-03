@@ -2,13 +2,13 @@
 // In our UI, the player should be able to play the game by clicking on buttons rather than typing their answer in a prompt.
 // For now, remove the logic that plays exactly five rounds.
 // Create three buttons, one for each selection. Add an event listener to the buttons that call your playRound function with the correct playerSelection every time a button is clicked. (you can keep the console.logs for this step)
-// Add a div for displaying results and change all of your console.logs into DOM methods.
-// Display the running score, and announce a winner of the game once one player reaches 5 points.
+// DO!!!Add a div for displaying results and change all of your console.logs into DOM methods.
+// DO!!!Display the running score, and announce a winner of the game once one player reaches 5 points.
 // You will likely have to refactor (rework/rewrite) your original code to make it work for this. That’s OK! Reworking old code is an important part of a programmer’s life.
 
 const RANDMAX = 3;
 const CHOICES = ["ROCK", "PAPER", "SCISSORS"];
-const ROUNDS = 3; //for console use
+const ROUNDS = 5;
 let roundsPlayed = 0;
 const score = new Map();
 score.set('WINS', 0);
@@ -39,7 +39,11 @@ gameInfoContainer.setAttribute('style', 'margin: auto; margin-top: 50px; display
 gameInfoContainer.appendChild(document.createElement('h3'));
 gameInfoContainer.lastElementChild.innerText = "---ROUND 1---";
 
-//this will display the results for each round
+//this will provide an overview for each round
+const roundOverviewText = document.createElement('p');
+gameInfoContainer.appendChild(roundOverviewText);
+
+//this will show the result for each round
 const roundResultText = document.createElement('p');
 gameInfoContainer.appendChild(roundResultText);
 
@@ -83,16 +87,19 @@ function getPlayerChoice() {
 const incrementWins = () => {
     score.set("WINS", score.get("WINS") + 1);
     scoreText.childNodes.item(1).innerText = score.get("WINS");
+    roundResultText.innerText = "You Win!";
 }
 
 const incrementLosses = () => {
     score.set("LOSSES", score.get("LOSSES") + 1);
     scoreText.childNodes.item(3).innerText = score.get("LOSSES");
+    roundResultText.innerText = "You Lose...";
 }
 
 const incrementTies = () => {
     score.set("TIES", score.get("TIES") + 1);
     scoreText.childNodes.item(5).innerText = score.get("TIES");
+    roundResultText.innerText = "A Tie.";
 }
 
 //plays one round of the game and returns the result
@@ -104,7 +111,7 @@ function playRound(playerChoice) {
     const compChoice = getComputerChoice();
 
     gameInfoContainer.childNodes.item(0).innerText = `---ROUND ${++roundsPlayed}---`;
-    roundResultText.innerText = `The computer chose \"${compChoice}\" vs your \"${playerChoice}\"`;
+    roundOverviewText.innerText = `The computer chose \"${compChoice}\" vs your \"${playerChoice}\"`;
     console.log(`The computer chose \"${compChoice}\" vs your \"${playerChoice}\"`);
 
     switch (playerChoice) {
@@ -147,7 +154,6 @@ function playRound(playerChoice) {
     }
 }
 
-//FOR CONSOLE PLAYING
 //plays as many rounds of the game as is in the above const variable
 // and finally returns the score for all the rounds afterwards
 function playGame() {
