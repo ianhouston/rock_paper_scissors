@@ -3,7 +3,7 @@
 // For now, remove the logic that plays exactly five rounds.
 // Create three buttons, one for each selection. Add an event listener to the buttons that call your playRound function with the correct playerSelection every time a button is clicked. (you can keep the console.logs for this step)
 // Add a div for displaying results and change all of your console.logs into DOM methods.
-// DO!!!Display the running score, and announce a winner of the game once one player reaches 5 points.
+// Display the running score, and announce a winner of the game once one player reaches 5 points.
 // You will likely have to refactor (rework/rewrite) your original code to make it work for this. That’s OK! Reworking old code is an important part of a programmer’s life.
 
 const RANDMAX = 3;
@@ -75,18 +75,6 @@ function getRandNum() { return Math.floor(Math.random() * RANDMAX); }
 //generates a random choice to use for the computer
 function getComputerChoice() { return CHOICES[getRandNum()]; }
 
-//prompts the user for a choices until one from the CHOICES array is chosen (not case-sensitive)
-function getPlayerChoice() {
-    let playerChoice;
-
-    playerChoice = (prompt("Play rock, paper, or scissors?")).toUpperCase();
-    while (!(CHOICES.includes(playerChoice))) {
-        playerChoice = (prompt("Invalid choice! Please check your spelling and try again.\nPlay rock, paper, or scissors?")).toUpperCase();
-    }
-    
-    return playerChoice;
-}
-
 const incrementWins = () => {
     score.set("WINS", score.get("WINS") + 1);
     scoreText.childNodes.item(1).innerText = score.get("WINS");
@@ -107,29 +95,21 @@ const incrementTies = () => {
 
 //plays one round of the game and returns the result
 function playRound(playerChoice) {
-    // this conditional is for console input if the buttons are not used
-    if (playerChoice == undefined) {
-        playerChoice = getPlayerChoice();
-    }
     const compChoice = getComputerChoice();
 
     gameInfoContainer.childNodes.item(0).innerText = `---ROUND ${++roundsPlayed}---`;
     roundOverviewText.innerText = `The computer chose \"${compChoice}\" vs your \"${playerChoice}\"`;
-    console.log(`The computer chose \"${compChoice}\" vs your \"${playerChoice}\"`);
 
     switch (playerChoice) {
         case "ROCK":
             switch (compChoice) {
                 case "ROCK":
-                    console.log("A Tie.");
                     incrementTies();
                     break;
                 case "PAPER":
-                    console.log("You Lose...");
                     incrementWins();
                     break;
                 case "SCISSORS":
-                    console.log("You Win!");
                     incrementLosses();
                     break;
             }
@@ -137,15 +117,12 @@ function playRound(playerChoice) {
         case "PAPER":
             switch (compChoice) {
                 case "ROCK":
-                    console.log("You Win!");
                     incrementWins();
                     break;
                 case "PAPER":
-                    console.log("A Tie.");
                     incrementTies();
                     break;
                 case "SCISSORS":
-                    console.log("You Lose...");
                     incrementLosses();
                     break;
             }
@@ -153,48 +130,24 @@ function playRound(playerChoice) {
         case "SCISSORS":
             switch (compChoice) {
                 case "ROCK":
-                    console.log("You Lose...");
                     incrementLosses();
                     break;
                 case "PAPER":
-                    console.log("You Win!");
                     incrementWins();
                     break;
                 case "SCISSORS":
-                    console.log("A Tie.");
                     incrementTies();
                     break;
             }
     }
     //present a winner once the user or the computer reaches 5 wins
-    if (score.get("WINS") == 5) {
-        gameInfoContainer.lastElementChild.innerText = "You won the game! Congratulations!\nYou can keep playing if you want to";
-    }
-    else if (score.get("LOSSES") == 5) {
-        "You lost the game... that's too bad.\nYou can keep playing if you want to";
-    }
-    else {
-        console.log(score);
-    }
-}
-
-//plays as many rounds of the game as is in the above const variable
-// and finally returns the score for all the rounds afterwards
-function playGame() {
-    for (let i = 0; i < ROUNDS; i++) {
-        console.log(`Starting round ${i+1}!`); // DELETE THIS
-        playRound();
-    }
-
-    console.log(`All ${ROUNDS} rounds are finished.\nYour score is ${score.get("WINS")} wins, ${score.get("LOSSES")} losses, and ${score.get("TIES")} ties.`);
-    if (score["WINS"] > score["LOSSES"]) {
-        console.log("You won the game! Congrats!");
-    }
-    else if (score["WINS"] < score["LOSSES"]) {
-        console.log("You Lost the game... Sorry.");
-    }
-    else {
-        console.log("You both tied for score.");
+    if (gameInfoContainer.lastElementChild.innerText == "") {
+        if (score.get("WINS") == 5) {
+            gameInfoContainer.lastElementChild.innerText = "You won the game! Congratulations!\nYou can keep playing if you want to";
+        }
+        else if (score.get("LOSSES") == 5) {
+            gameInfoContainer.lastElementChild.innerText = "You lost the game... that's too bad.\nYou can keep playing if you want to";
+        }
     }
 }
 
