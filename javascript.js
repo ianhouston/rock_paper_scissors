@@ -36,18 +36,22 @@ body.appendChild(gameInfoContainer);
 gameInfoContainer.setAttribute('style', 'margin: auto; margin-top: 50px; display: flex; flex-direction: column; align-items: center;');
 
 //creating results and running score elements
-gameInfoContainer.appendChild(document.createElement('p'));
+gameInfoContainer.appendChild(document.createElement('h3'));
 gameInfoContainer.lastElementChild.innerText = "---ROUND 1---";
 
+//this will display the results for each round
 const roundResultText = document.createElement('p');
 gameInfoContainer.appendChild(roundResultText);
 
-gameInfoContainer.appendChild(document.createElement('p'));
+//this is for a static heading for the score
+gameInfoContainer.appendChild(document.createElement('h3'));
 gameInfoContainer.lastElementChild.innerText = "---SCORE---";
 
+//this will contain the text for the score
 const scoreText = document.createElement('p');
 gameInfoContainer.appendChild(scoreText);
 
+//this creates the individual text elements for score to make it easier to modify
 score.forEach((value, key) => {
     scoreText.appendChild(document.createElement('span'));
     scoreText.lastElementChild.innerText = ` ${key}: `;
@@ -76,6 +80,21 @@ function getPlayerChoice() {
     return playerChoice;
 }
 
+const incrementWins = () => {
+    score.set("WINS", score.get("WINS") + 1);
+    scoreText.childNodes.item(1).innerText = score.get("WINS");
+}
+
+const incrementLosses = () => {
+    score.set("LOSSES", score.get("LOSSES") + 1);
+    scoreText.childNodes.item(3).innerText = score.get("LOSSES");
+}
+
+const incrementTies = () => {
+    score.set("TIES", score.get("TIES") + 1);
+    scoreText.childNodes.item(5).innerText = score.get("TIES");
+}
+
 //plays one round of the game and returns the result
 function playRound(playerChoice) {
     // this conditional is for console input if the buttons are not used
@@ -84,6 +103,8 @@ function playRound(playerChoice) {
     }
     const compChoice = getComputerChoice();
 
+    gameInfoContainer.childNodes.item(0).innerText = `---ROUND ${++roundsPlayed}---`;
+    roundResultText.innerText = `The computer chose \"${compChoice}\" vs your \"${playerChoice}\"`;
     console.log(`The computer chose \"${compChoice}\" vs your \"${playerChoice}\"`);
 
     switch (playerChoice) {
@@ -91,37 +112,37 @@ function playRound(playerChoice) {
             switch (compChoice) {
                 case "ROCK":
                     console.log("A Tie.");
-                    return 0;
+                    return incrementTies();
                 case "PAPER":
                     console.log("You Win!");
-                    return 1;
+                    return incrementWins();
                 case "SCISSORS":
                     console.log("You Lose...");
-                    return -1;
+                    return incrementLosses();
             }
         case "PAPER":
             switch (compChoice) {
                 case "ROCK":
                     console.log("You Win!");
-                    return 1;
+                    return incrementWins();
                 case "PAPER":
                     console.log("A Tie.");
-                    return 0;
+                    return incrementTies();
                 case "SCISSORS":
                     console.log("You Lose...");
-                    return -1;
+                    return incrementLosses();
             }
         case "SCISSORS":
             switch (compChoice) {
                 case "ROCK":
                     console.log("You Lose...");
-                    return -1;
+                    return incrementLosses();
                 case "PAPER":
                     console.log("You Win!");
-                    return 1;
+                    return incrementWins();
                 case "SCISSORS":
                     console.log("A Tie.");
-                    return 0;
+                    return incrementTies();
             }
     }
 }
@@ -132,21 +153,7 @@ function playRound(playerChoice) {
 function playGame() {
     for (let i = 0; i < ROUNDS; i++) {
         console.log(`Starting round ${i+1}!`); // DELETE THIS
-        gameInfoContainer.childNodes.item(0).innerText = `---ROUND ${++roundsPlayed}---`;
-        switch (playRound()) {
-            case 1:
-                score.set("WINS", score.get("WINS") + 1);
-                scoreText.childNodes.item(1).innerText = score.get("WINS");
-                break;
-            case 0:
-                score.set("LOSSES", score.get("LOSSES") + 1);
-                scoreText.childNodes.item(3).innerText = score.get("LOSSES");
-                break;
-            case -1:
-                score.set("TIES", score.get("TIES") + 1);
-                scoreText.childNodes.item(5).innerText = score.get("TIES");
-                break;
-        }
+        playRound();
     }
 
     console.log(`All ${ROUNDS} rounds are finished.\nYour score is ${score.get("WINS")} wins, ${score.get("LOSSES")} losses, and ${score.get("TIES")} ties.`);
@@ -162,24 +169,24 @@ function playGame() {
 }
 
 // ADDING EVENTS TO BUTTONS
+
+//calls playRound with the choice provided by the button's text content
 const playRoundOnClick = (event) => {
-    switch(event.curentTarget.textContent) {
+    switch(event.srcElement.textContent) {
         case 'ROCK':
-            buttonContainer.childNodes.item(0).setAttribute('style', 'border-color: lightgreen;');
             playRound("ROCK");
-            buttonContainer.childNodes.item(0).setAttribute('style', 'border-color: white;');
             break;
         case 'PAPER':
-            buttonContainer.childNodes.item(1).setAttribute('style', 'border-color: lightgreen;');
             playRound("PAPER");
-            buttonContainer.childNodes.item(1).setAttribute('style', 'border-color: white;');
             break;
         case 'SCISSORS':
-            buttonContainer.childNodes.item(2).setAttribute('style', 'border-color: lightgreen;');
             playRound("SCISSORS");
-            buttonContainer.childNodes.item(2).setAttribute('style', 'border-color: white;');
             break;
         default:
             alert("ERROR: Failed to recognize which button was clicked!");
     }
 }
+
+buttonContainer.childNodes.forEach((button) => {
+    button.addEventListener('click', playRoundOnClick);
+})
